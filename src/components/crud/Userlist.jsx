@@ -1,29 +1,27 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 export const Userlist = () => {
     const [users, setUsers] = useState([]);
-
+   let  getData = () =>{
+        axios.get('http://localhost/practice/api/action.php')
+        .then(function (response) {
+            console.log(response);
+            setUsers(response.data);
+        })
+    }
 	useEffect(() => {
-		const apiUrl = 'http://localhost/practice/api/action.php'; //This URL change according to path of your PHP Script
-
-		fetch(apiUrl)
-		.then((response) => response.json())
-		.then((data) => {
-			setUsers(data);
-		});
+		getData()
 
 	}, []);
 
     const handleDelete = (user_id) => {
 		if(confirm("Are your sure you want to remove it?"))
 		{
-			fetch(`http://localhost/practice/api/action.php?id=${user_id}`, {
-				method : 'DELETE'
-			})
-			.then((response) => response.json())
-			.then(() => {
-				setUsers((prevUser) => prevUser.filter((user) => user.id !== user_id));
-			});
+            axios.delete(`http://localhost/practice/api/action.php?id=${user_id}`)
+            .then(() => {
+                setUsers((prevUser) => prevUser.filter((user) => user.id !== user_id));
+            });
 		}
 	};
   return (

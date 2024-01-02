@@ -1,57 +1,61 @@
 import {useState, useEffect} from 'react';
 
 import { Link, useNavigate, useParams } from 'react-router-dom';
-
+import axios from 'axios';
 export const Edit = () =>{
 
-	let navigate = useNavigate();
+	const navigate = useNavigate();
+  const { user_id } = useParams();
 
-	const {user_id} = useParams();
+  const [user, setUser] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+  });
 
-	const [user, setUser] = useState({
-		first_name : '',
-		last_name : '',
-		email : ''
-	});
+  const handleChange = (event) => {
+    const { name, value } = event.target;
 
-	const handleChange = (event) => {
-		const {name, value} = event.target;
+    setUser({
+      ...user,
+      [name]: value,
+    });
+  };
 
-		setUser({
-			...user,
-			[name] : value
-		});
-	};
+//   const fetchUserData = () => {
+//     axios.get(`http://localhost/practice/api/action.php?id=${user_id}`)
+//       .then(function (response) {
+//         console.log('rr',response);
+//         setUser(response.data);
+//       })
+//       .catch(function (error) {
+//         console.error('Error fetching user data', error);
+//       });
+//   };
+const fetchUserData = async () => {
+    try {
+        const response = await axios.get(`http://localhost/practice/api/action.php?id=${user_id}`);
+        setUser(response.data);
+    } catch (error) {
+      console.error('Error fetching data', error);
+    }
+  };
+  useEffect(() => {
+    fetchUserData();
+  }, []); // Include user_id in the dependency array
 
-	const fetchUserData = () => {
-		fetch(`http://localhost/practice/api/action.php?id=${user_id}`)
-		.then((response) => response.json())
-		.then((data) => {
-			setUser(data);
-		});
-	};
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-	useEffect(() => {
-		fetchUserData();
-	}, []);
+    axios.put(`http://localhost/practice/api/action.php?id=${user_id}`, user)
+      .then(function () {
+        navigate('/');
+      })
+      .catch(function (error) {
+        console.error('Error updating user data', error);
+      });
+  };
 
-	const handleSubmit = (event) => {
-
-		event.preventDefault();
-        console.log(123);
-		fetch(`http://localhost/practice/api/action.php?id=${user_id}`, {
-			method : 'PUT',
-			headers : {
-				'Content-Type': 'application/json'
-			},
-			body : JSON.stringify(user)
-		})
-        .then((response) => response.json())
-		.then(() => {
-            navigate("/");
-		});
-
-	};
 
 	return (
 		<div className="card">

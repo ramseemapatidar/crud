@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 export const Add = () => {
     let navigate = useNavigate();
 
@@ -21,19 +23,10 @@ export const Add = () => {
 	const handleSubmit = (event) => {
 
 		event.preventDefault();
-
-		fetch('http://localhost/practice/api/action.php', {
-			method : 'POST',
-			headers : {
-				'Content-Type' : 'application/json'
-			},
-			body : JSON.stringify(user)
-		})
-		.then((response) => response.json())
-		.then(() => {
-			navigate("/");
-		})
-
+        axios.post('http://localhost/practice/api/action.php', user)
+        .then(() => {
+            navigate("/");
+        })
 	};
   return (
     <div className="card">
