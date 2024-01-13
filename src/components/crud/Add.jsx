@@ -39,13 +39,7 @@ export const Add = () => {
 
 	const { mutate,isError } = useMutation({ 
 		mutationFn: (newTodo) => 
-			fetch('http://localhost/react/api/action.php', {
-				method:'POST',
-				body : JSON.stringify(newTodo),
-				headers: {
-					'content-type':'Application/json',
-				},
-			}),
+			axios.post('http://localhost/react/api/action.php', newTodo),
 			onSuccess:async()=>{
 				
 				navigate("/");
