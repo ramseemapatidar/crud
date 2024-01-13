@@ -53,10 +53,16 @@ export const Add = () => {
 		mutate(formData)
 		
 	  };
+	  // Define the mutation function
+  const postNewTodo = async (newTodo) => {
+    const response = await axios.post('http://localhost/react/api/action.php', newTodo);
+    return response.data;
+  };
 
-	const { mutate } = useMutation({ 
-		mutationFn: (newTodo) => 
-			axios.post('http://localhost/react/api/action.php', newTodo),
+  // Use useMutation hook
+  const { mutate } = useMutation({ 
+		mutationFn: postNewTodo, 
+			
 			onSuccess:async()=>{
 				
 				navigate("/");
@@ -67,6 +73,7 @@ export const Add = () => {
 			},
 		
 	})
+
 
 	return (
 		<div className="card">
