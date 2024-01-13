@@ -30,22 +30,44 @@ export const Add = () => {
 		});
 	};
 
-	const handleSubmit = (event) => {
+	// const handleSubmit = (event) => {
 
-		event.preventDefault();
-		mutate(user)
+	// 	event.preventDefault();
+	// 	mutate(user)
 		
-	};
+	// };
 
-	const { mutate,isError } = useMutation({ 
+
+
+	
+	
+	  const handleSubmit = async (e) => {
+		e.preventDefault();
+		const formData = new FormData();
+		formData.append('image', e.target.elements.image.files[0]);
+		for (const key in user) {
+			if (Object.hasOwnProperty.call(user, key)) {
+			  formData.append(key, user[key]);
+			}
+		  }
+		mutate(formData)
+		
+	  };
+
+	const { mutate } = useMutation({ 
 		mutationFn: (newTodo) => 
 			axios.post('http://localhost/react/api/action.php', newTodo),
 			onSuccess:async()=>{
 				
 				navigate("/");
-			}
+			},
+			onError:async(error)=>{
+				console.log(error.message);
+				
+			},
 		
 	})
+
 	return (
 		<div className="card">
 				<div className="card-header">
@@ -72,6 +94,10 @@ export const Add = () => {
 								<div className="mb-3">
 									<label>Email</label>
 									<input type="email" name="email" className="form-control" onChange={handleChange} />
+								</div>
+								<div className="mb-3">
+									<label>File</label>
+									<input type="file" name="image" />
 								</div>
 								<div className="mb-3">
 									<input type="submit" className="btn btn-primary" value="Add" />
