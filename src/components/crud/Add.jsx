@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-
+import { addUser } from '../../service/crud'
 const addNewData = async ({ first_name, last_name, email }) => {
 	try {
 		const { data } = await axios.post('http://localhost/react/api/action.php');
@@ -53,15 +53,11 @@ export const Add = () => {
 		mutate(formData)
 		
 	  };
-	  // Define the mutation function
-  const postNewTodo = async (newTodo) => {
-    const response = await axios.post('http://localhost/react/api/action.php', newTodo);
-    return response.data;
-  };
+  
 
   // Use useMutation hook
   const { mutate } = useMutation({ 
-		mutationFn: postNewTodo, 
+		mutationFn: addUser, 
 			
 			onSuccess:async()=>{
 				
